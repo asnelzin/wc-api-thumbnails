@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: WC API Thumbnails
-Version:     0.0.2
+Version:     0.0.3
 Author:      Alexander Nelzin
 Author URI:  https://asnelzin.ru
 */
@@ -11,9 +11,12 @@ function custom_products_api_data( $response, $post ) {
     $product = wc_get_product( $post );
 
     foreach ($response->data['images'] as $index=>$image) {
-        $thumbnail = wp_get_attachment_image_url( $image->id, 'shop_catalog' );
-        $response->data['images'][$index] = $thumbnail;
+        $response->data['meta'] = $image['id'];
+        $thumbnail = wp_get_attachment_image_url( $image['id'], 'shop_catalog' );
+        if ($thumbnail) {
+            $response->data['images'][$index]['thumbnail_url'] = $thumbnail;
+        }
     }
-    
+
     return $response;
 }
