@@ -72,26 +72,9 @@ class Academe_Wc_Api_Thumbnails
         // GET product: add in meta field to results.
         add_filter(
             'woocommerce_api_product_response',
-            array('Academe_Wc_Api_Custom_Meta', 'fetchCustomMeta'),
+            array('Academe_Wc_Api_Thumbnails', 'fetchCustomMeta'),
             10,
             4
-        );
-
-        // Want to hook into woocommerce_api_process_product_meta_{product_type} for all product types.
-        foreach(static::$product_type as $product_type) {
-            add_action(
-                'woocommerce_api_process_product_' . $product_type,
-                array('Academe_Wc_Api_Custom_Meta', 'updateCustomMeta'),
-                10,
-                2
-            );
-        }
-        // Add a hook to update product variations
-        add_action(
-            'woocommerce_api_save_product_variation',
-            array('Academe_Wc_Api_Custom_Meta', 'updateVariationCustomMeta'),
-            10,
-            3
         );
     }
 
@@ -103,45 +86,8 @@ class Academe_Wc_Api_Thumbnails
         // The admin and shop manager will have the capability "manage_woocommerce".
         // We only want users with this capability to see additional product meta fields.
 
-        if (current_user_can('manage_woocommerce')) {
-            $product_id = $product->id;
 
-            $all_meta = get_post_meta($product_id);
-
-            // Filter out meta we don't want.
-            $all_meta = array_diff_key($all_meta, array_flip(static::$protected_fields));
-
-            // Unserialize the meta field data where necessary.
-            foreach($all_meta as $key => &$value) {
-                $value = maybe_unserialize(reset($value));
-            }
-            unset($value);
-
-            $meta = $all_meta;
-
-            $product_data['meta'] = $meta;
-
-            if(isset($product_data['variations'])) {
-                foreach($product_data['variations'] as $k => &$variation) {
-                    $variation_id = $variation['id'];
-
-                    $all_meta = get_post_meta($variation_id);
-
-                    // Filter out meta we don't want.
-                    $all_meta = array_diff_key($all_meta, array_flip(static::$protected_fields));
-
-                    // Unserialize the meta field data where necessary.
-                    foreach($all_meta as $key => &$value) {
-                        $value = maybe_unserialize(reset($value));
-                    }
-                    unset($value);
-
-                    $meta = $all_meta;
-
-                    $variation['meta'] = $meta;
-                }
-            }
-        }
+        $product_data['meta'] = 'hui';
 
         return $product_data;
     }
@@ -185,12 +131,6 @@ class Academe_Wc_Api_Thumbnails
         }
     }
 
-    /**
-     * Update or create a product variation using above function.
-     */
-    public static function updateVariationCustomMeta($id, $menu_order, $data) {
-        Academe_Wc_Api_Custom_Meta::updateCustomMeta($id, $data);
-    }
 }
 
-Academe_Wc_Api_Custom_Meta::initialize();
+Academe_Wc_Api_Thumbnails::initialize();
