@@ -3,7 +3,7 @@
  * Plugin Name:       WC API Product Thumbnails
  * Plugin URI:        https://github.com/asnelzin/wc-api-thumbnails
  * Description:       This plugin adds image thumbnails to API product responses.
- * Version:           0.0.3
+ * Version:           0.0.4
  * Author:            Alexander Nelzin
  * License:           MIT License
  * License URI:       https://opensource.org/licenses/mit-license.php
